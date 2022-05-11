@@ -1,22 +1,14 @@
 <?php
 include './../db.php';
 
-$id = $_GET['id'];
+$id = null;
+
+if (sizeof($_GET) > 0) {
+    $id = $_GET['id'];
+}
 
 $db = new Db();
-
-if (sizeof($_POST) > 0) {
-    $id_proposito = $_POST['id_proposito'];
-    $proposito = $_POST['proposito'];
-    $vencimiento = $_POST['vencimiento'];
-
-    $query = "UPDATE propositos set proposito = '$proposito', vencimiento = '$vencimiento' where id = '$id'";
-    $res = $db->query($query);
-
-    if ($res) {
-        echo "Propósito actualizado correctamente";
-    }
-}
+$id_proposito = "";
 
 
 $query = "SELECT * from propositos where id = '$id'";
@@ -24,8 +16,10 @@ $query = "SELECT * from propositos where id = '$id'";
 
 $proposito = $db->row($query);
 
-if (is_null($proposito)) {
-    header('Location: index.php');
+if (!is_null($proposito)) {
+    $id_proposito = $proposito['id_proposito'];
+} else {
+    $proposito = array('proposito' => '', 'vencimiento' => '');
 }
 
 ?>
@@ -54,45 +48,55 @@ if (is_null($proposito)) {
 
     <?php require '../config/nav.php' ?>
 
-    <form action="proposito.php?id=<?= $proposito['id'] ?>" method="post">
+    <form action="guardar.php" method="post">
         <div class="container">
 
-            <div class="row">
+            <div class="row mb-5">
                 <div class="col-md-12">
                     <h1>Propósito</h1>
 
                     <a href="index.php" class="btn btn-secondary">Cancelar</a>
                     <input type="submit" name="accion" value="Guardar" class="btn btn-primary">
-                    <input type="hidden" name="id_proposito" value="<?= $proposito['id'] ?>" />
+                    <input type="hidden" name="id_proposito" value="<?= $id_proposito ?>" />
                 </div>
             </div>
 
-            <!-- mostrar la imagen en la funcionalidad de consulta/editar
-<div class="row my-3">
-<div class="col-md-6">
-    <img src="../img/image-placeholder.png" class="img-thumbnail">
-</div>
-</div>-->
 
-            <div class="row mt-5">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Propósito</label>
-                        <input type="text" value="<?= $proposito['proposito'] ?>" name="proposito" class="form-control">
+            <?php if (is_null($id)) { ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Imagen</label>
+                            <input type="file" name="image" class="form-control" />
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php } else { ?>
+                <div class="row ">
+                    <div class="col-md-6">
+                        <img src="../img/image-placeholder.png" class="img-thumbnail">
+                    </div>
+                <?php } ?>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Fecha de vencimiento</label>
-                        <input type="date" name="vencimiento" value="<?= $proposito['vencimiento'] ?>" class="form-control" />
+                <div class="row ">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Propósito</label>
+                            <input type="text" value="<?= $proposito['proposito'] ?>" name="proposito" class="form-control">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!--  <div class="row">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Fecha de vencimiento</label>
+                            <input type="date" name="vencimiento" value="<?= $proposito['vencimiento'] ?>" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <!--  <div class="row">
     <div class="col-md-6">
         <div class="form-group">
             <label>Imagen</label>
@@ -100,7 +104,7 @@ if (is_null($proposito)) {
         </div>
     </div>
 </div> -->
-        </div>
+                </div>
     </form>
 
 </body>

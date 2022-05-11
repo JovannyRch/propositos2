@@ -39,7 +39,7 @@ $propositos = $db->array($query);
 
                 <h1>Todos mis propósitos</h1>
 
-                <a href="guardar.php" type="button" class="btn btn-primary text-white">Nuevo propósito</a>
+                <a href="proposito.php" type="button" class="btn btn-primary text-white">Nuevo propósito</a>
 
                 <table class="table mt-5">
                     <thead>

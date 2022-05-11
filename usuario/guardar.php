@@ -22,8 +22,27 @@ if (sizeof($usuarios) > 0) {
     echo "<br/><a href='nuevo.php'>Regresar</a>";
 } else {
 
-    $insert = "insert into usuarios (email, nombre, password) values ('$email','$name','$passHashed')";
-    $resp = $db->insert($insert);
+    $query = "insert into usuarios (email, nombre, password) values ('$email','$name','$passHashed')";
+
+
+    if (!empty($_FILES["image"]["name"])) {
+
+        //file info 
+        $file_name = basename($_FILES["image"]["name"]);
+        $file_type = pathinfo($file_name, PATHINFO_EXTENSION);
+
+        //make an array of allowed file extension
+        $allowed_file_types = array('jpg', 'jpeg', 'png', 'gif');
+
+
+        //check if upload file is an image
+        if (in_array($file_type, $allowed_file_types)) {
+            $tmp_image = $_FILES['image']['tmp_name'];
+            $img_content = addslashes(file_get_contents($tmp_image));
+            $query = "insert into usuarios (email, nombre, password, image) values ('$email','$name','$passHashed', '$img_content')";
+        }
+    }
+    $resp = $db->insert($query);
     if ($resp) {
         header('location: ../index.php');
     } else {
