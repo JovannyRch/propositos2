@@ -1,6 +1,9 @@
 
 <?php
-include './config/conexion.php';
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'propositos');
 
 
 
@@ -48,7 +51,7 @@ class Db
             return $this->db->query($sql);
         } catch (\Throwable $th) {
             echo $th;
-            return array();
+            return false;
         }
     }
 

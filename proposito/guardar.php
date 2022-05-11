@@ -1,5 +1,5 @@
 <?php
-include './db.php';
+include './../db.php';
 session_start();
 
 
@@ -9,14 +9,22 @@ if (sizeof($_POST) > 0) {
     $vencimiento = $_POST['vencimiento'];
     $id_usuario = $_SESSION['id_usuario'];
 
-    $db = new Db();
-    $res = $db->insert("INSERT INTO propositos(proposito, vencimiento, id_usuario) values('$proposito', '$vencimiento', $id_usuario)");
 
 
-    if ($res) {
-        header("Location: index.php");
-    } else {
-        echo "Error al crear el propósito";
+    try {
+        $query = "INSERT INTO propositos(proposito, vencimiento, id_usuario) values('$proposito', '$vencimiento', $id_usuario)";
+
+        $db = new Db();
+        $res = $db->insert($query);
+
+
+        if ($res) {
+            header("Location: index.php");
+        } else {
+            echo "Error al crear el propósito";
+        }
+    } catch (\Throwable $th) {
+        echo $th;
     }
 }
 
@@ -52,6 +60,13 @@ if (sizeof($_POST) > 0) {
                 <a href="index.php" type="button" class="btn btn-primary text-white mt-4">Todos mis propósitos</a>
 
                 <form action="guardar.php" method="post" class="mt-4">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1>Propósito</h1>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">

@@ -13,6 +13,8 @@ $query = "SELECT * from usuarios where email = '$email'";
 $db = new Db();
 $usuarios = $db->array($query);
 
+$passHashed = md5($pass1);
+
 
 if (sizeof($usuarios) > 0) {
     echo "Email duplicado, por favor intente con otro";
@@ -20,7 +22,7 @@ if (sizeof($usuarios) > 0) {
     echo "<br/><a href='nuevo.php'>Regresar</a>";
 } else {
 
-    $insert = "insert into usuarios (email, nombre, password) values ('$email','$name','$pass1')";
+    $insert = "insert into usuarios (email, nombre, password) values ('$email','$name','$passHashed')";
     $resp = $db->insert($insert);
     if ($resp) {
         header('location: ../index.php');

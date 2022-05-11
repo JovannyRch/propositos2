@@ -1,3 +1,14 @@
+<?php
+include './../db.php';
+session_start();
+$id_usuario = $_SESSION['id_usuario'];
+
+
+$db = new Db();
+$query = "SELECT * from propositos where id_usuario = '$id_usuario'";
+$propositos = $db->array($query);
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -41,13 +52,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Propósito de año nuevo 1</td>
-                            <td>2020-02-01</td>
-                            <td><button class="btn btn-danger btn-sm">Eliminar</button></td>
-                            <td><button class="btn btn-secondary btn-sm">Actualizar</button></td>
-                        </tr>
+
+                        <?php foreach ($propositos as $proposito) { ?>
+                            <tr>
+                                <td><?= $proposito['id'] ?></td>
+                                <td><?= $proposito['proposito'] ?></td>
+                                <td><?= $proposito['vencimiento'] ?></td>
+                                <td>
+                                    <form action="borrar.php" method="post">
+                                        <input type="hidden" value="<?= $proposito['id'] ?>" name="id" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                </td>
+                                <td>
+
+                                    <form action="proposito.php" method="get">
+                                        <input type="hidden" value="<?= $proposito['id'] ?>" name="id" />
+                                        <button type="submit" class="btn btn-secondary btn-sm">Actualizar</button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
 

@@ -5,11 +5,15 @@ session_start();
 $db = new Db();
 
 if (count($_POST) > 0) {
+
+
+
     $pass = $_POST['pass'];
     $email = $_POST['email'];
 
 
-    $usuario = $db->login($email, $pass);
+    $hashedPassword = md5($pass);
+    $usuario = $db->login($email, $hashedPassword);
 
     if (is_null($usuario)) {
         echo "Credenciales no encontradas";
