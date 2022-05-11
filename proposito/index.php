@@ -40,6 +40,9 @@ $propositos = $db->array($query);
                 <h1>Todos mis propósitos</h1>
 
                 <a href="proposito.php" type="button" class="btn btn-primary text-white">Nuevo propósito</a>
+                <br><br>
+                <a href="./../usuario/perfil.php"> Perfil</a>
+                <br><br>
 
                 <table class="table mt-5">
                     <thead>

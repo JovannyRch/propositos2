@@ -82,8 +82,16 @@ $img_file = base64_encode($usuario['image']);
 
     <?php require '../config/nav.php' ?>
 
+
+
     <form action="perfil.php" method="post" enctype="multipart/form-data">
         <div class="container">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="../proposito/index.php" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </div>
 
             <h1>Perfil</h1>
 
