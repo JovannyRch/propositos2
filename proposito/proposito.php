@@ -2,25 +2,30 @@
 include './../db.php';
 
 $id = null;
-
+$id_proposito = "";
 if (sizeof($_GET) > 0) {
     $id = $_GET['id'];
+    $id_proposito  = $id;
 }
 
 $db = new Db();
-$id_proposito = "";
+
 
 
 $query = "SELECT * from propositos where id = '$id'";
 
 
 $proposito = $db->row($query);
+$img_file = null;
 
 if (!is_null($proposito)) {
-    $id_proposito = $proposito['id_proposito'];
+    $img_file = base64_encode($proposito['image']);
 } else {
-    $proposito = array('proposito' => '', 'vencimiento' => '');
+    $proposito = array('proposito' => '', 'vencimiento' => '', 'image' => null);
 }
+
+
+
 
 ?>
 
@@ -48,7 +53,7 @@ if (!is_null($proposito)) {
 
     <?php require '../config/nav.php' ?>
 
-    <form action="guardar.php" method="post">
+    <form action="guardar.php" method="post" enctype="multipart/form-data">
         <div class="container">
 
             <div class="row mb-5">
@@ -62,13 +67,12 @@ if (!is_null($proposito)) {
             </div>
 
 
-            <?php if (is_null($id)) { ?>
-                <div class="row">
+
+
+            <?php if (!is_null($proposito['image'])) { ?>
+                <div class="row ">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Imagen</label>
-                            <input type="file" name="image" class="form-control" />
-                        </div>
+                        <img src="data:image/jpg;charset=utf8;base64,<?= $img_file; ?>" class="img-thumbnail">
                     </div>
                 </div>
             <?php } else { ?>
@@ -76,35 +80,39 @@ if (!is_null($proposito)) {
                     <div class="col-md-6">
                         <img src="../img/image-placeholder.png" class="img-thumbnail">
                     </div>
-                <?php } ?>
+                </div>
+            <?php } ?>
 
-                <div class="row ">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Propósito</label>
-                            <input type="text" value="<?= $proposito['proposito'] ?>" name="proposito" class="form-control">
-                        </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Imagen</label>
+                        <input type="file" name="image" class="form-control" />
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Fecha de vencimiento</label>
-                            <input type="date" name="vencimiento" value="<?= $proposito['vencimiento'] ?>" class="form-control" />
-                        </div>
+            <div class="row ">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Propósito</label>
+                        <input type="text" required value="<?= $proposito['proposito'] ?>" name="proposito" class="form-control">
                     </div>
                 </div>
+            </div>
 
-                <!--  <div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label>Imagen</label>
-            <input type="file" name="imagen" class="form-control" />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Fecha de vencimiento</label>
+                        <input type="date" required name="vencimiento" value="<?= $proposito['vencimiento'] ?>" class="form-control" />
+                    </div>
+                </div>
+            </div>
+
+
         </div>
-    </div>
-</div> -->
-                </div>
     </form>
 
 </body>
